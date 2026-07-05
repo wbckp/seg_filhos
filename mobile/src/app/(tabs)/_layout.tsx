@@ -1,83 +1,82 @@
-import { Tabs } from 'expo-router';
-import { Platform } from 'react-native';
-import { useWindowDimensions } from 'react-native';
+import { Tabs, usePathname, router } from 'expo-router';
+import { View, Text, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
-export default function TabsLayout() {
+// ─── Definição das abas ───────────────────────────────────────────────────────
+const TABS = [
+  { name: 'dashboard', label: 'Início',      emoji: '🏠' },
+  { name: 'children',  label: 'Filhos',      emoji: '👶' },
+  { name: 'devices',   label: 'Dispositivos', emoji: '📱' },
+  { name: 'rules',     label: 'Regras',      emoji: '🔒' },
+  { name: 'alerts',    label: 'Alertas',     emoji: '🔔' },
+];
+
+// ─── Tab Bar totalmente customizada ──────────────────────────────────────────
+function CustomTabBar({ state }: BottomTabBarProps) {
   const { width } = useWindowDimensions();
-  const isTablet = width >= 768;
-  const isTV = width >= 1280;
+  const isTablet  = width >= 768;
+  const pathname  = usePathname();
 
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#030712',
-          borderTopColor: '#1f2937',
-          height: isTV ? 70 : isTablet ? 60 : 56,
-          paddingBottom: Platform.OS === 'ios' ? 16 : 8,
-        },
-        tabBarActiveTintColor: '#3b82f6',
-        tabBarInactiveTintColor: '#6b7280',
-        tabBarLabelStyle: {
-          fontSize: isTV ? 14 : 11,
-          fontWeight: '500',
-        },
-        tabBarIconStyle: {
-          marginTop: 4,
-        },
+    <View
+      style={{
+        flexDirection: 'row',
+        backgroundColor: '#030712',
+        borderTopWidth: 1,
+        borderTopColor: '#1f2937',
+        height: isTablet ? 72 : 64,
+        paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+        alignItems: 'center',
       }}
     >
-      <Tabs.Screen
-        name="dashboard"
-        options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => (
-            <TabIcon emoji="🏠" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="children"
-        options={{
-          title: 'Filhos',
-          tabBarIcon: ({ color, size }) => (
-            <TabIcon emoji="👨‍👧" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="devices"
-        options={{
-          title: 'Dispositivos',
-          tabBarIcon: ({ color, size }) => (
-            <TabIcon emoji="📱" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="rules"
-        options={{
-          title: 'Regras',
-          tabBarIcon: ({ color, size }) => (
-            <TabIcon emoji="🔒" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="alerts"
-        options={{
-          title: 'Alertas',
-          tabBarIcon: ({ color, size }) => (
-            <TabIcon emoji="🔔" color={color} size={size} />
-          ),
-        }}
-      />
-    </Tabs>
+      {TABS.map((tab) => {
+        const isActive = pathname.includes(tab.name);
+        return (
+          <TouchableOpacity
+            key={tab.name}
+            onPress={() => router.push(`/(tabs)/${tab.name}` as any)}
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: 8,
+              gap: 3,
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={{ fontSize: isTablet ? 22 : 20, lineHeight: isTablet ? 26 : 24 }}>
+              {tab.emoji}
+            </Text>
+            <Text
+              style={{
+                fontSize: isTablet ? 11 : 9,
+                fontWeight: '600',
+                color: isActive ? '#3b82f6' : '#6b7280',
+                lineHeight: isTablet ? 14 : 12,
+              }}
+              numberOfLines={1}
+            >
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
   );
 }
 
-function TabIcon({ emoji, color, size }: { emoji: string; color: string; size: number }) {
-  const { Text } = require('react-native');
-  return <Text style={{ fontSize: size * 0.85 }}>{emoji}</Text>;
+// ─── Layout ───────────────────────────────────────────────────────────────────
+export default function TabsLayout() {
+  return (
+    <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{ headerShown: false }}
+    >
+      <Tabs.Screen name="dashboard"  options={{ title: 'Início'       }} />
+      <Tabs.Screen name="children"   options={{ title: 'Filhos'       }} />
+      <Tabs.Screen name="devices"    options={{ title: 'Dispositivos' }} />
+      <Tabs.Screen name="rules"      options={{ title: 'Regras'       }} />
+      <Tabs.Screen name="alerts"     options={{ title: 'Alertas'      }} />
+    </Tabs>
+  );
 }

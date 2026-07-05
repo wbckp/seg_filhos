@@ -1,649 +1,716 @@
-# BACKEND - Sistema de Controle Parental (Produção)
+# FRONTEND - Sistema de Controle Parental (Android, Tablet e Android TV)
 
-Você é um Engenheiro de Software Sênior especializado em Node.js, TypeScript, Fastify, PostgreSQL, Prisma ORM, Supabase e Clean Architecture.
+Você é um Engenheiro de Software Sênior especializado em React, React Native, Expo, TypeScript, Android, Android TV, UX/UI e Material Design 3.
 
-Seu objetivo é gerar um backend completo, altamente escalável, seguro, modular e pronto para produção para um aplicativo de Controle Parental.
+Sua missão é criar um aplicativo profissional, moderno, extremamente responsivo e preparado para publicação na Google Play.
 
-## Stack obrigatória
+O aplicativo deverá funcionar perfeitamente em:
 
-* Node.js LTS
+* Smartphones Android
+* Tablets Android
+* Android TV (Google TV)
+
+Todo o projeto deverá ser escrito em TypeScript.
+
+Nunca utilizar JavaScript.
+
+O frontend deverá consumir a API REST já existente e utilizar o Supabase apenas para autenticação.
+
+---
+
+# Stack
+
+Utilizar obrigatoriamente:
+
+* React Native
+* Expo (última versão estável compatível)
 * TypeScript
-* Fastify
-* Prisma ORM
-* PostgreSQL (Supabase)
-* Supabase Auth
-* JWT (validação dos tokens do Supabase)
+* Expo Router
+* React Navigation
+* TanStack Query
+* Zustand
+* React Hook Form
 * Zod
-* Swagger/OpenAPI
-* Docker
-* Vitest
-* ESLint
-* Prettier
-* Husky
-* tsup
-
-Todo o código deve ser em TypeScript.
-
-Não utilizar JavaScript.
-
-Não utilizar Express.
+* Axios
+* React Native Paper (Material Design 3)
+* React Native Reanimated
+* React Native Gesture Handler
+* MMKV Storage
+* Expo Secure Store
+* Expo Notifications
+* Expo Location
+* Expo Device
+* Expo Network
+* Expo Image
+* React Native SVG
 
 ---
 
 # Arquitetura
 
-Implementar Clean Architecture.
+Implementar arquitetura modular.
 
 Estrutura:
 
 src/
 
-application/
+app/
 
-domain/
+components/
 
-infrastructure/
+features/
 
-interfaces/
+hooks/
 
-shared/
+services/
 
-config/
+stores/
 
-modules/
+contexts/
 
-Cada módulo deverá conter:
+providers/
 
-* controllers
-* services
-* repositories
-* entities
-* dtos
-* validators
-* routes
-* interfaces
+utils/
 
-Os Controllers devem apenas receber a requisição e chamar os Services.
+constants/
 
-Nenhuma regra de negócio poderá existir nos Controllers.
+types/
 
-Toda comunicação com o banco deverá ocorrer através de Repositories.
+assets/
 
-Utilizar Dependency Injection.
+theme/
 
-Aplicar SOLID em todo o projeto.
+navigation/
 
----
+Cada Feature deverá conter:
 
-# Autenticação
+components
 
-NÃO criar tabela própria de usuários com senha.
+screens
 
-Utilizar exclusivamente o Supabase Auth.
+services
 
-A autenticação será feita pelo Supabase.
+hooks
 
-O backend deverá apenas validar o JWT emitido pelo Supabase.
+types
 
-Criar middleware para autenticação.
+validators
 
-Criar middleware para autorização por papéis.
-
-Papéis:
-
-* ADMIN
-* PARENT
-
-Criar tabela:
-
-profiles
-
-Campos:
-
-* id UUID (referência para auth.users.id)
-* name
-* photo_url
-* role
-* created_at
-* updated_at
+styles
 
 ---
 
-# Banco de Dados
+# Design System
 
-Utilizar UUID em todas as tabelas.
+Utilizar Material Design 3.
 
-Criar migrations do Prisma.
+Criar tema completo contendo:
 
-Criar seed.
+Light Mode
 
-Criar índices.
+Dark Mode
 
-Criar Foreign Keys.
+Sistema de cores
 
-Criar Cascade Delete quando apropriado.
+Tipografia
 
-Adicionar:
+Espaçamentos
 
-created_at
+Elevações
 
-updated_at
+Bordas
 
-deleted_at
+Ícones
 
-Sempre que fizer sentido.
+Animações
 
----
+Shadows
 
-## children
+Ripple
 
-* id
-* parent_id
-* name
-* birth_date
-* photo_url
-* created_at
-* updated_at
-* deleted_at
+Tokens de Design
+
+Todo o projeto deverá utilizar o mesmo Design System.
 
 ---
 
-## devices
+# Responsividade
 
-* id
-* child_id
-* device_uuid
-* device_name
-* manufacturer
-* model
-* android_version
-* app_version
-* battery_level
-* is_online
-* last_seen
-* created_at
-* updated_at
+O aplicativo deverá adaptar automaticamente para:
 
----
+Telefone
 
-## device_settings
+Tablet
 
-* id
-* device_id
-* accessibility_enabled
-* usage_permission
-* overlay_permission
-* vpn_permission
-* location_permission
-* battery_optimization_disabled
-* last_sync
+Android TV
 
----
+Desktop (futuramente)
 
-## installed_apps
+Não utilizar tamanhos fixos.
 
-* id
-* device_id
-* package_name
-* app_name
-* version
-* icon
-* is_system
-* created_at
+Criar sistema baseado em:
+
+Breakpoints
+
+Compact
+
+Medium
+
+Expanded
+
+Large
+
+Utilizar Grid Responsivo.
+
+Componentes adaptáveis.
 
 ---
 
-## rules
+# Layout
 
-Uma única tabela para regras.
+Criar Layout diferente conforme dispositivo.
 
-Campos:
+## Smartphone
 
-* id
-* device_id
-* type
+Bottom Navigation
 
-Valores:
+FAB
 
-APP
+Drawer opcional
 
-SITE
-
-CATEGORY
-
-* target
-
-Exemplos:
-
-com.instagram.android
-
-youtube.com
-
-games
-
-adult
-
-social
-
-* action
-
-Valores:
-
-BLOCK
-
-ALLOW
-
-LIMIT
-
-* daily_limit_minutes
-
-* enabled
-
-* created_at
+Cards empilhados
 
 ---
 
-## schedules
+## Tablet
 
-* id
-* rule_id
-* weekday
-* start_time
-* end_time
-* enabled
+Navigation Rail
 
----
+Painéis lado a lado
 
-## app_usage_logs
+Master Detail
 
-* id
-* device_id
-* package_name
-* app_name
-* started_at
-* ended_at
-* duration_seconds
+Cards maiores
 
 ---
 
-## website_logs
+## Android TV
 
-* id
-* device_id
-* url
-* domain
-* title
-* blocked
-* accessed_at
+Menu lateral permanente
 
----
+Navegação por controle remoto
 
-## location_logs
+Suporte completo ao Focus
 
-* id
-* device_id
-* latitude
-* longitude
-* accuracy
-* speed
-* created_at
+Suporte ao D-Pad
+
+Suporte ao botão Back
+
+Itens grandes
+
+Cards maiores
+
+Espaçamento amplo
 
 ---
 
-## alerts
+# Navegação
 
-* id
-* device_id
-* type
-* severity
-* title
-* description
-* read
-* created_at
+Utilizar Expo Router.
 
-Tipos:
+Criar:
 
-APP_INSTALLED
+Login
 
-APP_REMOVED
+Cadastro
 
-BLOCKED_APP
-
-BLOCKED_SITE
-
-LOCATION_CHANGED
-
-PERMISSION_REVOKED
-
-VPN_DISABLED
-
-ACCESSIBILITY_DISABLED
-
----
-
-## audit_logs
-
-Registrar todas as ações importantes.
-
-Campos:
-
-* id
-* user_id
-* action
-* resource
-* resource_id
-* ip
-* user_agent
-* created_at
-
----
-
-## sync_queue
-
-Fila para sincronização offline.
-
-Campos:
-
-* id
-* device_id
-* payload
-* status
-* retry_count
-* created_at
-
-Status:
-
-PENDING
-
-PROCESSING
-
-SUCCESS
-
-FAILED
-
----
-
-# Row Level Security
-
-Preparar o banco para uso com RLS do Supabase.
-
-Cada pai poderá acessar apenas:
-
-* seus filhos
-* seus dispositivos
-* seus logs
-* suas regras
-* seus alertas
-
-Criar políticas compatíveis.
-
----
-
-# Funcionalidades
-
-Implementar:
-
-Autenticação via Supabase
-
-Perfil
-
-Cadastro de filhos
-
-Cadastro de dispositivos
-
-Registro automático de aplicativos instalados
-
-Regras de bloqueio
-
-Limites diários
-
-Horários de uso
-
-Histórico de aplicativos
-
-Histórico de sites
-
-Histórico de localização
-
-Alertas
+Recuperar senha
 
 Dashboard
 
-Logs de auditoria
+Filhos
 
-Fila de sincronização
+Dispositivos
+
+Regras
+
+Aplicativos
+
+Sites
+
+Horários
+
+Alertas
+
+Histórico
+
+Mapa
+
+Perfil
+
+Configurações
+
+Sobre
 
 ---
 
 # Dashboard
 
-Criar endpoint que retorna:
+Mostrar:
 
-Tempo de tela diário
+Tempo de tela
 
-Tempo semanal
+Uso diário
 
-Tempo mensal
+Uso semanal
 
-Aplicativos mais usados
+Uso mensal
+
+Dispositivos
+
+Filhos
+
+Localização
+
+Aplicativos mais utilizados
 
 Sites mais acessados
 
 Tentativas bloqueadas
 
-Quantidade de dispositivos
+Alertas recentes
 
-Quantidade de filhos
+Gráficos
 
-Localização atual
+Indicadores
 
-Última sincronização
-
-Status do dispositivo
-
-Permissões pendentes
+Cards
 
 ---
 
-# Endpoints
+# Funcionalidades
 
-/auth
+Autenticação
 
-GET /session
+Perfil
 
-GET /profile
+Gerenciamento dos filhos
 
-PUT /profile
+Gerenciamento dos dispositivos
 
-/children
+Cadastro de regras
 
-GET
+Bloqueio de aplicativos
 
-POST
+Bloqueio de sites
 
-GET /:id
+Categorias
 
-PUT /:id
+Horários
 
-DELETE /:id
+Tempo diário
 
-/devices
+Mapa
 
-GET
+Histórico
 
-POST
+Alertas
 
-GET /:id
+Dashboard
 
-PUT /:id
+Configurações
 
-DELETE /:id
+---
 
-/settings
+# API
 
-GET
+Criar camada completa.
 
-PUT
+services/api
 
-/apps
+Axios
 
-GET
+Interceptors
 
-POST
+Refresh Token
 
-DELETE
+Retry automático
 
-/rules
+Tratamento de erros
 
-GET
+Timeout
 
-POST
+Cancelamento
 
-PUT
+Cache
 
-DELETE
+Offline First
 
-/schedules
+---
 
-GET
+# Estado Global
 
-POST
+Utilizar Zustand.
 
-PUT
+Criar Stores:
 
-DELETE
+Auth
 
-/app-usage
+User
 
-GET
+Children
 
-/websites
+Devices
 
-GET
+Dashboard
 
-/location
+Alerts
 
-GET
+Settings
 
-POST
+Theme
 
-/alerts
+Connectivity
 
-GET
+---
 
-PUT
+# TanStack Query
 
-/dashboard
+Criar Queries para:
 
-GET
+Dashboard
 
-/audit
+Dispositivos
 
-GET
+Filhos
 
-/sync
+Alertas
 
-POST
+Aplicativos
+
+Sites
+
+Regras
+
+Localização
+
+Históricos
+
+Cache inteligente.
+
+Refetch automático.
+
+Background Sync.
+
+---
+
+# Formulários
+
+Utilizar:
+
+React Hook Form
+
+Zod
+
+Máscaras
+
+Validação em tempo real
+
+Mensagens amigáveis
+
+---
+
+# Componentes
+
+Criar biblioteca própria.
+
+Button
+
+Card
+
+Dialog
+
+Input
+
+Search
+
+Avatar
+
+List Item
+
+Header
+
+Footer
+
+Loading
+
+Skeleton
+
+Empty State
+
+Error State
+
+Charts
+
+Graphs
+
+Progress
+
+Badge
+
+Snackbar
+
+Toast
+
+Bottom Sheet
+
+Date Picker
+
+Time Picker
+
+Switch
+
+Checkbox
+
+Segmented Buttons
+
+---
+
+# Mapa
+
+Tela de localização.
+
+Mostrar:
+
+Posição atual
+
+Histórico
+
+Marcadores
+
+Atualização em tempo real
+
+---
+
+# Gráficos
+
+Criar gráficos para:
+
+Tempo de tela
+
+Uso semanal
+
+Uso mensal
+
+Aplicativos
+
+Sites
+
+Categorias
+
+---
+
+# Alertas
+
+Tela completa.
+
+Filtros.
+
+Pesquisa.
+
+Ordenação.
+
+Marcar como lido.
+
+---
+
+# Histórico
+
+Pesquisar.
+
+Filtrar.
+
+Exportar.
+
+Aplicativos.
+
+Sites.
+
+Localização.
+
+---
+
+# Configurações
+
+Tema
+
+Idioma
+
+Notificações
+
+Conta
+
+Privacidade
+
+Ajuda
+
+Sobre
+
+---
+
+# Tema
+
+Suporte completo para:
+
+Light
+
+Dark
+
+Automático
+
+---
+
+# Internacionalização
+
+Preparar para:
+
+Português
+
+Inglês
+
+Espanhol
+
+Utilizar i18n.
+
+---
+
+# Acessibilidade
+
+Implementar:
+
+Leitor de tela
+
+Alto contraste
+
+Fonte dinâmica
+
+Labels
+
+Hints
+
+Suporte completo ao TalkBack
+
+---
+
+# Android TV
+
+Todo componente deverá possuir:
+
+focusable
+
+focusRing
+
+Animação ao ganhar foco
+
+Animação ao perder foco
+
+Navegação pelo D-Pad
+
+Suporte ao botão Home
+
+Suporte ao botão Back
+
+Suporte ao botão OK
+
+Suporte ao botão Menu
+
+Evitar qualquer interação exclusivamente por toque.
+
+Todos os menus devem funcionar utilizando apenas o controle remoto.
+
+---
+
+# Performance
+
+Lazy Loading
+
+Code Splitting
+
+Memoização
+
+Virtualização de listas
+
+Cache
+
+Imagens otimizadas
+
+Paginação
+
+Infinite Scroll
+
+---
+
+# Offline
+
+Salvar dados localmente utilizando MMKV.
+
+Sincronizar automaticamente quando voltar conexão.
+
+Fila de sincronização.
 
 ---
 
 # Segurança
 
-Implementar:
+Secure Store para tokens.
 
-Helmet
+Nunca armazenar JWT em AsyncStorage.
 
-Rate Limit
+Criptografar dados sensíveis.
 
-CORS
-
-Compress
-
-Validação Zod
-
-Sanitização de entrada
-
-Proteção contra SQL Injection
-
-Proteção contra XSS
-
-Middleware global de erros
-
-Logs estruturados
+Logout automático quando token expirar.
 
 ---
 
-# Resposta da API
+# Notificações
 
-Sucesso
+Push Notifications.
 
-{
-"success": true,
-"message": "Operation completed successfully.",
-"data": {}
-}
+Alertas locais.
 
-Erro
-
-{
-"success": false,
-"message": "Validation failed.",
-"errors": []
-}
+Atualização em tempo real.
 
 ---
 
-# Prisma
+# Qualidade
 
-Gerar:
+ESLint
 
-schema.prisma
+Prettier
 
-Todas as migrations
+Husky
 
-Relacionamentos
+Conventional Commits
 
-Índices
+Sem uso de "any".
 
-Constraints
+Componentes reutilizáveis.
 
-Enums
-
-Cascade Delete
-
-UUID padrão
-
----
-
-# Docker
-
-Criar:
-
-Dockerfile
-
-docker-compose.yml
-
-.env.example
+Código limpo.
 
 ---
 
 # Testes
 
-Criar testes unitários para Services.
+Criar:
 
-Criar testes de integração das rotas.
+Testes unitários
 
-Cobertura mínima de 80%.
+Testes de componentes
 
----
+Testes de navegação
 
-# Swagger
-
-Documentar todas as rotas.
-
-Adicionar exemplos de requisição e resposta.
-
-Adicionar autenticação Bearer.
+Testes de integração
 
 ---
 
@@ -651,29 +718,75 @@ Adicionar autenticação Bearer.
 
 Gerar documentação completa contendo:
 
-* Instalação
-* Configuração do Supabase
-* Variáveis de ambiente
-* Estrutura do projeto
-* Arquitetura
-* Fluxo de autenticação
-* Como executar
-* Como testar
-* Como fazer deploy
-* Convenções do projeto
+Instalação
+
+Configuração
+
+Estrutura do projeto
+
+Arquitetura
+
+Como executar
+
+Como gerar APK
+
+Como gerar AAB
+
+Como publicar na Play Store
+
+Como configurar ambiente de desenvolvimento
 
 ---
 
-# Requisitos de qualidade
+# Requisitos visuais
 
-* Código fortemente tipado.
-* Não utilizar "any".
-* Funções pequenas e coesas.
-* Separação rigorosa de responsabilidades.
-* Repository Pattern.
-* Service Layer.
-* DTOs.
-* Dependency Injection.
-* Tratamento centralizado de erros.
-* Código preparado para escalar para milhares de dispositivos simultâneos.
-* Projeto pronto para integração com um aplicativo React Native que utilizará Supabase Auth e consumirá esta API REST.
+Criar uma interface moderna inspirada em aplicativos premium.
+
+Características:
+
+* Material Design 3
+* Aparência limpa
+* Animações suaves
+* Cards arredondados
+* Ícones consistentes
+* Excelente legibilidade
+* Layout adaptável para qualquer resolução
+* Experiência otimizada para toque, mouse e controle remoto
+* Interface elegante e profissional, pronta para uso comercial
+
+---
+
+# Requisitos adicionais
+
+O aplicativo deverá ser dividido em dois perfis distintos:
+
+## Aplicativo dos Pais
+
+Permite:
+
+* Login
+* Cadastro
+* Dashboard
+* Gerenciamento de filhos
+* Gerenciamento de dispositivos
+* Criação de regras
+* Visualização de relatórios
+* Localização em tempo real
+* Histórico de uso
+* Alertas
+* Configurações
+
+## Aplicativo da Criança (Modo Protegido)
+
+Após o pareamento com a conta do responsável, o aplicativo deverá:
+
+* Executar em segundo plano.
+* Sincronizar automaticamente com o backend.
+* Receber regras de bloqueio.
+* Exibir apenas uma tela de proteção quando um aplicativo ou site for bloqueado.
+* Não permitir alterações sem autenticação do responsável.
+* Informar status de sincronização e permissões concedidas.
+
+A estrutura do código deve permitir gerar os dois aplicativos a partir da mesma base de código (monorepo ou compartilhamento de módulos), reutilizando componentes, serviços, tema e lógica de negócio.
+
+O resultado final deve ser um frontend altamente escalável, preparado para milhares de usuários simultâneos, com excelente experiência em smartphones, tablets e Android TV, mantendo desempenho elevado e código organizado seguindo as melhores práticas do ecossistema React Native.
